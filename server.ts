@@ -14,11 +14,11 @@ app.use(session({
     saveUninitialized: true,
     cookie: { secure: process.env.NODE_ENV === 'production' }
 }))
-
 app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
 
 app.get('/', (req: Request, res: Response) => {
-    res.send("Hello")
+    res.send(req.session.account)
 })
 
 app.post('/auth/login', Login)

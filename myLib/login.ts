@@ -32,9 +32,17 @@ export async function Login(req: Request, res: Response) {
             )
         }
 
-        return res.status(200).json(
-            myRes(1, 'ເຂົ້າສູ່ລະບົບສຳເລັດ')
-        )
+        req.session.account = email
+
+        if (req.session.account) {
+            return res.status(200).json(
+                myRes(1, 'ເຂົ້າສູ່ລະບົບສຳເລັດ')
+            )
+        } else {
+            return res.status(500).json(
+                myRes(0, 'ລະບົບ Login ມີບັນຫາບາງຢ່າງ')
+            )
+        }
 
     } catch (error) {
         console.error('/auth/login =', error)
