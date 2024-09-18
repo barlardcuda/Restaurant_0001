@@ -1,0 +1,10 @@
+{
+    "watch": [
+        "server.ts",
+        "myLib/*.ts",
+        "*.ts",
+        "**"
+    ],
+    "ext": "ts,js,cjs,mjs,json,njk,env",
+    "exec": "bun run server.ts"
+}
