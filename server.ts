@@ -1,9 +1,16 @@
 import express, { Request, Response } from 'express'
 import session from 'express-session'
+import cors from 'cors'
 import dotenv from 'dotenv'
 import { Register, Login } from './lib'
 
 dotenv.config()
+
+declare module 'express-session' {
+    interface SessionData {
+        account?: string
+    }
+}
 
 const app = express()
 const port = process.env.PORT || 3050
@@ -16,6 +23,11 @@ app.use(session({
 }))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+app.use(cors({
+    origin: 'http://localhost:3000',
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type']
+}))
 
 app.get('/', (req: Request, res: Response) => {
     res.send(req.session.account)
