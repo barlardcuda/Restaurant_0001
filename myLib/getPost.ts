@@ -13,7 +13,9 @@ export async function getPost(req: Request, res: Response) {
         }
 
         return res.status(200).json(
-            result[0]
+            {
+                result
+            }
         )
     } catch (error) {
         console.error("/getPost/\n", error)

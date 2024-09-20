@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="icons/uicons-bold-rounded.css">
+    <link rel="stylesheet" href="css/index.css">
+    <script src="talwind.js"></script>
+    <title>ຮ້ານອາຫານ</title>
+</head>
+
+<body class="bg-gray-100">
+
+    <!-- Navbar -->
+    <nav class="bg-white shadow-md w-full p-2 pt-3 fixed top-0 flex justify-center items-center">
+        <div class="max-w-screen-md w-full flex justify-between items-center">
+            <div class="text-2xl font-bold">ຮ້ານອາຫານ</div>
+            <div class="flex space-x-4 items-center">
+                <i class="fi fi-br-search text-xl" style="line-height: normal"></i>
+                <i class="fi fi-br-sign-out-alt text-xl" style="line-height: normal"></i>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto p-4 mt-12">
+        <div id="md-content" class="hidden md:grid grid-cols-4 gap-2 max-w-screen-md mx-auto"></div>
+        <div id="sm-content" class="md:hidden grid grid-cols-2 gap-2 max-w-screen-md mx-auto"></div>
+    </div>
+</body>
+<script>
+    let mdContent = document.getElementById('md-content')
+    let smContent = document.getElementById('sm-content')
+
+    fetch('http://localhost:3250/api/getPost')
+        .then(res => res.json())
+        .then(resData => {
+            const data = resData.result
+
+            const createContent = (item) => {
+                return `
+                    <div class="w-full rounded-md bg-gray-200 mb-2">
+                        <div class="img rounded-md w-full h-32 bg-gray-300"></div>
+                        <div id="content" class="w-full p-2">
+                            <h2 class="text-lg">${item.name}</h2>
+                            <p class="text-sm font-thin">${item.price.toLocaleString()} LAK</p>
+                        </div>
+                    </div>
+                `
+            }
+
+            const createMdContent = () => {
+                let content = [[], [], [], []]
+                for (let i = 0; i < data.length; i++) {
+                    content[i % 4].push(createContent(data[i]))
+                }
+
+                let result = ""
+                content.forEach(column => {
+                    result += `<div>${column.join('')}</div>`
+                })
+
+                return result
+            }
+
+            const createSmContent = () => {
+                let content = [[], []]
+                for (let i = 0; i < data.length; i++) {
+                    content[i % 2].push(createContent(data[i]))
+                }
+
+                let result = ""
+                content.forEach(column => {
+                    result += `<div>${column.join('')}</div>`
+                })
+                return result
+            }
+
+            mdContent.innerHTML = createMdContent()
+            smContent.innerHTML = createSmContent()
+        })
+        .catch(err => console.error('Error fetching posts:', err))
+</script>
+
+</html>

@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express'
 import session from 'express-session'
 import cors from 'cors'
 import dotenv from 'dotenv'
+import path from 'path'
 import { Register, Login, getPost } from './libary'
 
 dotenv.config()
@@ -21,19 +22,22 @@ app.use(session({
     saveUninitialized: true,
     cookie: { secure: process.env.NODE_ENV === 'production' }
 }))
+
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cors({
-    origin: 'http://localhost:3000',
+    origin: 'http://localhost:3250',
     methods: ['GET', 'POST'],
     allowedHeaders: ['Content-Type']
 }))
+
+app.use(express.static(path.join(__dirname, 'public')))
 
 app.get('/', (req: Request, res: Response) => {
     res.send(req.session.account)
 })
 
-app.get('/api/getPost/:count', getPost)
+app.get('/api/getPost', getPost)
 
 app.post('/auth/login', Login)
 
