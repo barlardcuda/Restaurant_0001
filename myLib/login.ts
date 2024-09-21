@@ -5,7 +5,6 @@ import { RowDataPacket } from 'mysql2'
 
 export async function Login(req: Request, res: Response) {
     const { email, password } = req.body
-
     if (!email) {
         return res.status(400).json(
             myRes(0, 'ກະລຸນາໃສ່ Email')
