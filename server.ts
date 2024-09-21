@@ -27,7 +27,7 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 const allowWithoutLogin = ['/login.html', '/register.html', '/tailwind.js', '/css/index.css','/fonts/notosanslao.ttf', '/icons/uicons-bold-rounded.css', '/auth/login', '/auth/register', '/admin/login.html', '/admin/auth/login']
-const adminPath = ['/admin/', '/admin']
+const adminPath = ['/admin/', '/admin', '/api/getPost', '/api/uploads']
 
 function checkLogin(req: Request, res: Response, next: NextFunction) {
     if (adminPath.includes(req.path)) {

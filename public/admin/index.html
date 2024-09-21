@@ -51,8 +51,12 @@
     </div>
 
     <div class="container mx-auto p-4 mt-12">
-        <div id="md-content" class="hidden md:grid grid-cols-4 gap-2 max-w-screen-md mx-auto"></div>
-        <div id="sm-content" class="md:hidden grid grid-cols-2 gap-2 max-w-screen-md mx-auto"></div>
+        <div id="md-content" class="hidden md:grid grid-cols-4 gap-2 max-w-screen-md mx-auto">
+            ມັນກຳລັງໂຫລດ.........
+        </div>
+        <div id="sm-content" class="md:hidden grid grid-cols-2 gap-2 max-w-screen-md mx-auto">
+            ມັນກຳລັງໂຫລດ.........
+        </div>
     </div>
 </body>
 
@@ -69,17 +73,26 @@
     }
     const closeAddForm = () => {
         addFormContainer.style.display = 'none'
+        addForm.elements['img'].value = ''
+        addForm.elements['name'].value = ''
+        addForm.elements['price'].value = ''
+        addForm.elements['bought'].value = ''
     }
 
     const getPost = () => {
         fetch('/api/getPost')
         .then(res => res.json())
         .then(resData => {
+            if (resData.status === 0) {
+                console.log(resData.desc)
+                return
+            }
+
             const data = resData.result
 
             const createContent = (item) => {
                 return `
-                    <div class="w-full rounded-md bg-gray-200 mb-2">
+                    <div class="w-full rounded-md bg-white mb-2">
                         <div class="img rounded-md w-full h-32 bg-gray-300"></div>
                         <div id="content" class="w-full p-2">
                             <h2 class="text-lg">${item.name}</h2>
@@ -121,6 +134,10 @@
         })
         .catch(err => console.error('Error fetching posts:', err))
     }
+
+    setInterval(() => {
+        getPost()
+    }, 5000);
 </script>
 
 </html>
