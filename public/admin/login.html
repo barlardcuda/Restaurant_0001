@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/index.css">
-    <script src="tailwind.js"></script>
+    <link rel="stylesheet" href="/css/index.css">
+    <script src="/tailwind.js"></script>
     <title>Admin</title>
 </head>
 
@@ -51,7 +51,7 @@
         }
 
         try {
-            const response = await fetch('/admin/login', {
+            const response = await fetch('/admin/auth/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -59,12 +59,10 @@
                 body: JSON.stringify(data)
             })
 
-            console.log(JSON.stringify(data))
-
             const result = await response.json()
 
             if (result.status === 1) {
-                window.location.href = "/"
+                window.location.href = "/admin"
             } else {
                 statusAlert.innerText = result.desc
                 statusAlert.style.display = 'block'

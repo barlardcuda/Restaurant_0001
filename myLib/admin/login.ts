@@ -3,7 +3,7 @@ import db from './../db'
 import { myRes } from './../myRes'
 import { RowDataPacket } from 'mysql2'
 
-export async function Login(req: Request, res: Response) {
+export async function adminLogin(req: Request, res: Response) {
     const { email, password } = req.body
     if (!email) {
         return res.status(400).json(
@@ -31,9 +31,9 @@ export async function Login(req: Request, res: Response) {
             )
         }
 
-        req.session.account = email
+        req.session.admin = email
 
-        if (req.session.account) {
+        if (req.session.admin) {
             return res.status(200).json(
                 myRes(1, 'ເຂົ້າສູ່ລະບົບສຳເລັດ')
             )

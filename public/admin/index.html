@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/icons/uicons-bold-rounded.css">
+    <link rel="stylesheet" href="/css/index.css">
+    <script src="/tailwind.js"></script>
+    <title>Admin</title>
+</head>
+
+<body class="bg-gray-100">
+
+    <nav class="bg-white shadow-md w-full p-2 pt-3 fixed top-0 flex justify-center items-center">
+        <div class="max-w-screen-md w-full flex justify-between items-center">
+            <div class="text-2xl font-bold">ແອັດມິນ</div>
+            <div class="flex space-x-6 items-center">
+                <i class="fi fi-rr-search text-xl cursor-pointer" style="line-height: normal"></i>
+                <i onclick="openAddForm()" class="fi fi-rr-square-plus text-xl cursor-pointer" style="line-height: normal"></i>
+                <i class="fi fi-rr-apps text-xl" style="line-height: normal"></i>
+            </div>
+        </div>
+    </nav>
+
+    <div id="add-form-container" style="display: none" class="fixed top-0 items-center bg-black bg-opacity-50 backdrop-blur-sm w-full h-screen">
+        <form method="dialog" id="addForm" class="max-w-screen-md w-full h-min mx-auto bg-white shadow-md rounded-lg p-6" onsubmit="">
+            <h2 class="text-2xl font-bold mb-4 text-center">ເພີ່ມສິນຄ້າໃໝ່</h2>
+            <div class="mb-4">
+                <label for="img" class="block text-sm font-medium text-gray-700">ອັບໂຫລດຮູບ</label>
+                <input type="file" name="img" class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:border-blue-500" required
+                       accept=".jpg, .jpeg, .png">
+            </div>
+            <div class="mb-4">
+                <label for="name" class="block text-sm font-medium text-gray-700">ຊື່ສິນຄ້າ</label>
+                <input type="text" name="name" class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:border-blue-500" placeholder="ຊື່ສິນຄ້າ" required>
+            </div>
+            <div class="mb-4">
+                <label for="price" class="block text-sm font-medium text-gray-700">ລາຄາ</label>
+                <input type="number" name="price" class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:border-blue-500" placeholder="ລາຄາ" required>
+            </div>
+            <div class="mb-4">
+                <label for="bought" class="block text-sm font-medium text-gray-700">ຈຳນວນ</label>
+                <input type="number" name="bought" class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:border-blue-500" placeholder="ຈຳນວນ" required>
+            </div>
+            <ul>
+                <button onclick="closeAddForm()" type="button" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">ຍົກເລີກຟອມ</button>
+                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">ເພີ່ມສິ້ນຄ້າ</button>
+            </ul>
+        </form>
+    </div>
+
+    <div class="container mx-auto p-4 mt-12">
+        <div id="md-content" class="hidden md:grid grid-cols-4 gap-2 max-w-screen-md mx-auto"></div>
+        <div id="sm-content" class="md:hidden grid grid-cols-2 gap-2 max-w-screen-md mx-auto"></div>
+    </div>
+</body>
+
+
+<script>
+    let mdContent = document.getElementById('md-content')
+    let smContent = document.getElementById('sm-content')
+
+    let addFormContainer = document.getElementById('add-form-container')
+    let addForm = document.getElementById('addForm')
+
+    const openAddForm = () => {
+        addFormContainer.style.display = 'flex'
+    }
+    const closeAddForm = () => {
+        addFormContainer.style.display = 'none'
+    }
+
+    const getPost = () => {
+        fetch('/api/getPost')
+        .then(res => res.json())
+        .then(resData => {
+            const data = resData.result
+
+            const createContent = (item) => {
+                return `
+                    <div class="w-full rounded-md bg-gray-200 mb-2">
+                        <div class="img rounded-md w-full h-32 bg-gray-300"></div>
+                        <div id="content" class="w-full p-2">
+                            <h2 class="text-lg">${item.name}</h2>
+                            <p class="text-sm font-thin">${item.price.toLocaleString()} LAK</p>
+                        </div>
+                    </div>
+                `
+            }
+
+            const createMdContent = () => {
+                let content = [[], [], [], []]
+                for (let i = 0; i < data.length; i++) {
+                    content[i % 4].push(createContent(data[i]))
+                }
+
+                let result = ""
+                content.forEach(column => {
+                    result += `<div>${column.join('')}</div>`
+                })
+
+                return result
+            }
+
+            const createSmContent = () => {
+                let content = [[], []]
+                for (let i = 0; i < data.length; i++) {
+                    content[i % 2].push(createContent(data[i]))
+                }
+
+                let result = ""
+                content.forEach(column => {
+                    result += `<div>${column.join('')}</div>`
+                })
+                return result
+            }
+
+            mdContent.innerHTML = createMdContent()
+            smContent.innerHTML = createSmContent()
+        })
+        .catch(err => console.error('Error fetching posts:', err))
+    }
+</script>
+
+</html>
