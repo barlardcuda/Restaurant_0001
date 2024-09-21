@@ -39,7 +39,7 @@ export async function Register(req: Request, res: Response) {
         }
 
     } catch (error) {
-        console.error('/auth/register =', error)
+        console.error('/auth/register\n', error)
         return res.status(500).json(
             myRes(0, 'ລະບົບ Login ມີບັນຫາບາງຢ່າງ')
         )

@@ -9,6 +9,6 @@ export function myRes(statusIn: number, descIn: string, cmdIn: string = ""): myR
         status: statusIn,
         desc: descIn,
         cmd: cmdIn
-    };
+    }
     return result
 }

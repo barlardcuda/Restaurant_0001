@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
-import db from './db'
-import { myRes } from './myRes'
+import db from './../db'
+import { myRes } from './../myRes'
 import { RowDataPacket } from 'mysql2'
 
 export async function Login(req: Request, res: Response) {
@@ -16,7 +16,7 @@ export async function Login(req: Request, res: Response) {
     }
 
     try {
-        const [result] = await db.execute<RowDataPacket[]>("SELECT password FROM account WHERE email = ?", [email])
+        const [result] = await db.execute<RowDataPacket[]>("SELECT password FROM admin WHERE email = ?", [email])
         
         if (result.length === 0) {
             return res.status(401).json(
@@ -44,7 +44,7 @@ export async function Login(req: Request, res: Response) {
         }
 
     } catch (error) {
-        console.error('/auth/login\n', error)
+        console.error('/auth/admin\n', error)
         return res.status(500).json(
             myRes(0, 'ລະບົບ Login ມີບັນຫາບາງຢ່າງ')
         )
