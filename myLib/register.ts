@@ -18,7 +18,7 @@ export async function Register(req: Request, res: Response) {
     }
 
     try {
-        const [emailCheckResult] = await db.query<ResultSetHeader[]>("SELECT email FROM account WHERE email = ?", [email])
+        const [emailCheckResult] = await db.execute<ResultSetHeader[]>("SELECT email FROM account WHERE email = ?", [email])
         
         if (emailCheckResult.length > 0) {
             return res.status(400).json(
@@ -26,7 +26,7 @@ export async function Register(req: Request, res: Response) {
             )
         }
 
-        const [insertResult] = await db.query<ResultSetHeader>("INSERT INTO account (email, password) VALUES (?, ?)", [email, password])
+        const [insertResult] = await db.execute<ResultSetHeader>("INSERT INTO account (email, password) VALUES (?, ?)", [email, password])
 
         if (insertResult.affectedRows === 1) {
             return res.status(201).json(

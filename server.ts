@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express'
+import express, { Request, Response, NextFunction } from 'express'
 import session from 'express-session'
 import cors from 'cors'
 import dotenv from 'dotenv'
@@ -31,16 +31,23 @@ app.use(cors({
     allowedHeaders: ['Content-Type']
 }))
 
-app.use(express.static(path.join(__dirname, 'public')))
+const allowWithoutLogin = ['/login.html', '/register.html', '/tailwind.js', '/auth/login/', '/auth/register/']
 
-app.get('/', (req: Request, res: Response) => {
-    res.send(req.session.account)
-})
+function checkLogin(req: Request, res: Response, next: NextFunction) {
+    console.log(req.path)
+    if (req.session?.account || allowWithoutLogin.includes(req.path)) {
+        return next()
+    }
+    res.redirect('/login.html')
+}
+
+app.use(checkLogin)
+
+app.use(express.static(path.join(__dirname, 'public')))
 
 app.get('/api/getPost', getPost)
 
 app.post('/auth/login', Login)
-
 app.post('/auth/register', Register)
 
 app.listen(port, () => {

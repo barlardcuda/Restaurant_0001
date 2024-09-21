@@ -17,7 +17,7 @@ export async function Login(req: Request, res: Response) {
     }
 
     try {
-        const [result] = await db.query<RowDataPacket[]>("SELECT password FROM account WHERE email = ?", [email])
+        const [result] = await db.execute<RowDataPacket[]>("SELECT password FROM account WHERE email = ?", [email])
         
         if (result.length === 0) {
             return res.status(401).json(
