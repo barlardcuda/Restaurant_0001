@@ -7,73 +7,105 @@
     <link rel="stylesheet" href="css/index.css">
     <script src="tailwind.js"></script>
     <title>ເຂົ້າສູ່ລະບົບ</title>
+
+    <style>
+        /* Keyframes for the gradient animation */
+        @keyframes gradientBackground {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        /* Gradient animation with blur effect */
+        body {
+            background: linear-gradient(135deg, #ffafbd, #ffc3a0, #2193b0, #6dd5ed, #cc2b5e, #753a88);
+            background-size: 400% 400%;
+            animation: gradientBackground 15s ease infinite;
+        }
+
+        .content-wrapper {
+            backdrop-filter: blur(0px);
+        }
+    </style>
 </head>
 
-<body class="bg-gray-100 h-screen min-h-[230px] md:flex items-center md:justify-center">
-    <div class="w-full max-w-md bg-white rounded-lg shadow-md p-8 mt-24 md:mt-0">
-        <h2 class="text-4xl font-semibold text-center text-gray-800 mb-6">ເຂົ້າສູ່ລະບົບ</h2>
-        <form method="dialog" class="space-y-6" onsubmit="login(event)">
-            <div id="status-alert" style="display: none"
-                class="mt-1 w-full px-3 py-2 border bg-red-400 text-white border-gray-300 rounded-sm shadow-sm focus:outline-none focus:ring focus:border-blue-500">
-            </div>
+<body class="min-h-screen flex items-center justify-center">
+
+    <div class="content-wrapper w-full max-w-md bg-white rounded-lg shadow-lg p-8 space-y-8 relative z-10">
+        <h2 class="text-3xl font-bold text-center text-gray-900">ຮ້ານອາຫານໜ້າປາກຊ້ອຍ</h2>
+        <div id="status-alert" class="hidden text-center py-2 px-4 rounded-lg bg-red-500 text-white"></div>
+
+        <!-- Login Form -->
+        <form id="login-form" class="space-y-6" onsubmit="login(event)">
             <div>
                 <label for="email" class="block text-sm font-medium text-gray-700">ອີເມວ</label>
-                <input type="email" id="email" name="email" required placeholder="ປ້ອນອີເມວ"
-                    class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring focus:border-blue-500">
+                <input type="email" id="email" name="email" required
+                    placeholder="ປ້ອນອີເມວ"
+                    class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring focus:border-blue-500 transition">
             </div>
             <div>
                 <label for="password" class="block text-sm font-medium text-gray-700">ລະຫັດຜ່ານ</label>
-                <input type="password" id="password" name="password" required placeholder="ປ້ອນລະຫັດຜ່ານ"
-                    class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring focus:border-blue-500">
+                <input type="password" id="password" name="password" required
+                    placeholder="ປ້ອນລະຫັດຜ່ານ"
+                    class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring focus:border-blue-500 transition">
             </div>
-            <p class="text-start text-gray-600 mt-4">
-                ຍັງບໍ່ມີບັນຊີ? <a href="register.html" class="text-blue-600 hover:underline">ສະໝັກບັນຊີ</a>
-            </p>
-            <input type="submit" id="submit"
-                class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-300"
-                value="ເຂົ້າລະບົບ">
+
+            <!-- Submit Button -->
+            <button type="submit" id="submit"
+                class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition focus:ring-4 focus:ring-blue-300">
+                ເຂົ້າລະບົບ
+            </button>
         </form>
     </div>
-</body>
-<script>
-    let statusAlert = document.getElementById('status-alert')
-    let email = document.getElementById('email')
-    let password = document.getElementById('password')
-    let submit = document.getElementById('submit')
 
-    const login = async (event) => {
-        event.preventDefault()
-        submit.value = '...'
+    <!-- JavaScript for Login Handling -->
+    <script>
+        const statusAlert = document.getElementById('status-alert');
+        const email = document.getElementById('email');
+        const password = document.getElementById('password');
+        const submit = document.getElementById('submit');
 
-        let data = {
-            email: email.value,
-            password: password.value
-        }
+        const login = async (event) => {
+            event.preventDefault();
+            submit.textContent = 'ກຳລັງໂຫຼດ...';
 
-        try {
-            const response = await fetch('/auth/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            })
+            const data = {
+                email: email.value,
+                password: password.value
+            };
 
-            const result = await response.json()
+            try {
+                const response = await fetch('/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
 
-            if (result.status === 1) {
-                window.location.href = "/"
-            } else {
-                statusAlert.innerText = result.desc
-                statusAlert.style.display = 'block'
+                const result = await response.json();
+
+                if (result.status === 1) {
+                    window.location.href = "/";
+                } else {
+                    statusAlert.textContent = result.desc || "ຂໍໂທດ, ລາຍລະອຽດບໍ່ຖືກຕ້ອງ";
+                    statusAlert.classList.remove('hidden');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                statusAlert.textContent = "ມີບັນຫາກັບການເຂົ້າລະບົບ.";
+                statusAlert.classList.remove('hidden');
             }
-        } catch (error) {
-            console.error('Error:', error)
-            statusAlert.innerText = "ລະບົບມີບັນຫາບາງຢ່າງ"
-            statusAlert.style.display = 'block'
+
+            submit.textContent = 'ເຂົ້າລະບົບອີກຄັ້ງ';
         }
-        submit.value = 'ເຂົ້າລະບົບອີກຄັ້ງ'
-    }
-</script>
+    </script>
+</body>
 
 </html>
