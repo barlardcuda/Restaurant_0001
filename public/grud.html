@@ -21,28 +21,44 @@
         #menu-overlay {
             backdrop-filter: blur(4px)
         }
+
+        /* Styles for the edit modal */
+        #edit-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(4px)
+        }
+
+        #edit-form {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
+        }
     </style>
 </head>
 
 <body class="bg-gray-100 hidden md:block">
     <header class="bg-white shadow-md w-full p-3 fixed top-0 flex justify-center items-center z-10">
         <nav class="max-w-screen-md w-full flex justify-between items-center">
-            <div class="text-2xl font-bold">ຮ້ານອາຫານໜ້າປາກຊ້ອຍ</div>
+            <div class="text-2xl font-bold">ຈັດການສິ້ນຄ້າ</div>
             <div class="flex space-x-6 items-center">
-                <i id="search-icon" class="fi fi-rr-search text-xl cursor-pointer" aria-label="Search"
-                    style="line-height: 0"></i>
-                <i id="menu-icon" class="fi fi-rr-apps text-xl cursor-pointer" aria-label="Menu"
-                    style="line-height: 0"></i>
+                <i id="search-icon" class="fi fi-rr-search text-xl cursor-pointer" aria-label="Search" style="line-height: 0"></i>
+                <i id="menu-icon" class="fi fi-rr-apps text-xl cursor-pointer" aria-label="Menu" style="line-height: 0"></i>
             </div>
         </nav>
     </header>
 
     <div id="menu-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-10 hidden"></div>
     <div id="menu" class="fixed top-0 left-0 w-64 h-full bg-white shadow-lg z-20 p-4">
-        <h2 class="text-xl font-bold mb-4">ຮ້ານອາຫານໜ້າປາກຊ້ອຍ</h2>
+        <h2 class="text-xl font-bold mb-4">ຈັດການສິ້ນຄ້າ</h2>
         <ul>
             <li><a href="#" class="block py-2">ໜ້າຫລັກ</a></li>
-            <li><a href="/grud.html" class="block py-2">ຈັດການສິນຄ້າ</a></li>
+            <li><a href="#" class="block py-2">ຈັດການສິນຄ້າ</a></li>
             <li><a href="/auth/logout" class="block text-red-500 py-2">ອອກຈາກລະບົບ</a></li>
         </ul>
     </div>
@@ -54,40 +70,34 @@
         </div>
     </div>
 
+    <div id="edit-modal" class="flex">
+        <div id="edit-form">
+            <h2 class="text-center text-2xl">ແກ້ໄຂສິນຄ້າ</h2>
+
+            <label for="product-name">ຊື່ສິນຄ້າ:</label>
+            <input type="file" id="product-img" class="w-full mb-2 p-2 border rounded" accept=".png .jpg .jpeg" />
+
+            <label for="product-name">ຊື່ສິນຄ້າ:</label>
+            <input type="text" id="product-name" class="w-full mb-2 p-2 border rounded" />
+
+            <label for="product-price">ລາຄາ:</label>
+            <input type="number" id="product-price" class="w-full mb-2 p-2 border rounded" />
+
+            <div class="flex justify-between">
+                <button id="delete-product" class="bg-red-500 text-white px-4 py-2 rounded">ລຶບ</button>
+                <button id="save-product" class="bg-blue-500 text-white px-4 py-2 rounded">ບັນທຶກ</button>
+            </div>
+        </div>
+    </div>
+
     <main class="flex h-screen pt-14">
         <section class="w-full p-4 overflow-y-auto overflow-x-hidden">
             <div id="md-content" class="hidden lg:grid grid-cols-4 gap-2 max-w-screen-md mx-auto"></div>
             <div id="sm-content" class="lg:hidden grid grid-cols-2 gap-2 max-w-screen-md mx-auto"></div>
         </section>
-
-        <aside class="w-[425px] p-4 bg-white overflow-hidden">
-            <div id="print" class="overflow-y-auto">
-                <h2 class="text-center text-2xl">ຮ້ານອາຫານໜ້າປາກຊ້ອຍ</h2>
-                <ul class="flex justify-between text-sm m-6">
-                    <li class="text-start">ວັນທີ: 25/09/2024</li>
-                    <li class="text-start">ID: 129237</li>
-                </ul>
-
-                <div id="order-items" class="mt-2 space-y-2">
-                </div>
-
-                <div id="order-total" class="mt-2">
-                    <ul class="flex justify-between p-2 text-sm">
-                        <span>ລວມທັງໝົດ:</span>
-                        <div class="flex items-center">
-                            <p id="total-amount" class="mr-4">0 ກີບ</p>
-                            <p id="total-items" class="w-10 h-full text-center">0</p>
-                        </div>
-                    </ul>
-                </div>
-            </div>
-            <div class="mt-12 flex justify-between space-x-4">
-                <button id="cancel-order" class="bg-red-500 text-white p-2 rounded-md w-5/12">ຍົກເລີກ</button>
-                <button id="confirm-order" class="bg-blue-500 text-white p-2 rounded-md w-5/12">ຢື້ນຢັນ</button>
-            </div>
-        </aside>
     </main>
-    <script src="/js/index.js"></script>
+
+    <script src="js/grud.js"></script>
 </body>
 
 </html>
