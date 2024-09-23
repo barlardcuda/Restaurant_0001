@@ -13,6 +13,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const productPriceInput = document.getElementById('product-price')
     const deleteButton = document.getElementById('delete-product')
     const saveButton = document.getElementById('save-product')
+    const productImgInput = document.getElementById('product-img')
+    const previewImg = document.getElementById('preview-img')
 
     let itemMap = {}
     let editingItemId = null
@@ -86,6 +88,9 @@ document.addEventListener("DOMContentLoaded", () => {
                         productPriceInput.value = item.price
                         editingItemId = id
 
+                        // Update image preview
+                        previewImg.src = item.image || '' // Make sure the image URL is correct
+
                         editModal.style.display = 'flex'
                     })
                 })
@@ -106,7 +111,8 @@ document.addEventListener("DOMContentLoaded", () => {
         if (editingItemId) {
             const updatedData = {
                 name: productNameInput.value,
-                price: Number(productPriceInput.value)
+                price: Number(productPriceInput.value),
+                // You might need to handle the image upload separately
             }
 
             fetch(`/api/update/${editingItemId}`, {
@@ -126,6 +132,20 @@ document.addEventListener("DOMContentLoaded", () => {
             editModal.style.display = 'none'
         }
     }
+
+    // Handle image preview
+    productImgInput.addEventListener('change', (event) => {
+        const file = event.target.files[0]
+        if (file) {
+            const reader = new FileReader()
+            reader.onload = () => {
+                previewImg.src = reader.result
+            }
+            reader.readAsDataURL(file)
+        } else {
+            previewImg.src = ''
+        }
+    })
 
     fetchData()
 })

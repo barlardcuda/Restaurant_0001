@@ -2,7 +2,7 @@ import express, { Request, Response, NextFunction } from 'express'
 import session from 'express-session'
 import dotenv from 'dotenv'
 import path from 'path'
-import { Login, getPost } from './libary'
+import { Login, Order, Uploads, getPost } from './libary'
 
 dotenv.config()
 
@@ -40,6 +40,9 @@ app.use(checkLogin)
 app.use(express.static(path.join(__dirname, 'public')))
 
 app.get('/api/getPost', getPost)
+
+app.post('/api/order', Order)
+app.post('/api/upload', Uploads)
 
 app.post('/auth/login', Login)
 app.get('/auth/logout', (req: Request, res: Response) => {

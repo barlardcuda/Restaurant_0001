@@ -162,10 +162,30 @@ document.addEventListener("DOMContentLoaded", () => {
         filterItems('')
     })
 
-    confirmOrder.addEventListener('click', () => {
-        alert('ການຊື້ສຳເລັດ!')
-        console.log(cart)
-        cart = []
-        updateOrderSummary()
-    })
+    confirmOrder.addEventListener('click', async () => {
+        try {
+            const response = await fetch('/api/order', {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(cart)
+            });
+    
+            const result = await response.json()
+    
+            if (response.ok) {
+                alert(result.desc)
+                cart = []
+                updateOrderSummary()
+            } else {
+                alert(result.desc)
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('ມີບັນຫາໃນການສົ່ງຂໍ້ມູນ');
+        }
+    });
+    
+    
 })
