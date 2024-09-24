@@ -7,57 +7,48 @@
     <link rel="stylesheet" href="icons/uicons-bold-rounded.css">
     <link rel="stylesheet" href="css/index.css">
     <script src="tailwind.js" defer></script>
-    <title>ร้านอาหาร</title>
+    <title>ແກ້ໄຂສິນຄ້າ</title>
     <style>
         #menu {
-            transform: translateX(-100%);
-            transition: transform 0.3s ease;
+            transform: translateX(-100%); transition: transform 0.3s ease
         }
 
         #menu.show {
-            transform: translateX(0);
+            transform: translateX(0)
         }
 
         #menu-overlay {
-            backdrop-filter: blur(4px);
+            backdrop-filter: blur(4px)
         }
 
-        /* Styles for the edit modal */
         #edit-modal {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.5);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            backdrop-filter: blur(4px);
-            z-index: 30; /* Ensure it's above other elements */
+            position: fixed; inset: 0; background: rgba(0, 0, 0, 0.5); display: none; justify-content: center; align-items: center; backdrop-filter: blur(4px); z-index: 30
         }
 
-        #edit-form {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            width: 300px;
-            max-width: 100%;
+        #new-modal {
+            position: fixed; inset: 0; background: rgba(0, 0, 0, 0.5); display: none; justify-content: center; align-items: center; backdrop-filter: blur(4px); z-index: 30
         }
     </style>
 </head>
 
-<body class="bg-gray-100 hidden md:block">
+<body class="bg-gray-100">
     <header class="bg-white shadow-md w-full p-3 fixed top-0 flex justify-center items-center z-10">
         <nav class="max-w-screen-md w-full flex justify-between items-center">
-            <div class="text-2xl font-bold">ຈັດການສິ້ນຄ້າ</div>
+            <div class="text-2xl">ຈັດການສິນຄ້າ</div>
             <div class="flex space-x-6 items-center">
-                <i id="search-icon" class="fi fi-rr-search text-xl cursor-pointer" aria-label="Search" style="line-height: 0"></i>
-                <i id="menu-icon" class="fi fi-rr-apps text-xl cursor-pointer" aria-label="Menu" style="line-height: 0"></i>
+                <i id="search-icon" class="fi fi-rr-search text-xl cursor-pointer" aria-label="Search"
+                    style="line-height: 0"></i>
+                <i id="add-icon" class="fi fi-rr-square-plus text-xl cursor-pointer" aria-label="Search"
+                    style="line-height: 0"></i>
+                <i id="menu-icon" class="fi fi-rr-apps text-xl cursor-pointer" aria-label="Menu"
+                    style="line-height: 0"></i>
             </div>
         </nav>
     </header>
 
     <div id="menu-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-10 hidden"></div>
     <div id="menu" class="fixed top-0 left-0 w-64 h-full bg-white shadow-lg z-20 p-4">
-        <h2 class="text-xl font-bold mb-4">ຈັດການສິ້ນຄ້າ</h2>
+        <h2 class="text-xl font-bold mb-4">ຈັດການສິນຄ້າ</h2>
         <ul>
             <li><a href="/" class="block py-2">ໜ້າຫລັກ</a></li>
             <li><a href="#" class="block py-2">ຈັດການສິນຄ້າ</a></li>
@@ -67,32 +58,96 @@
 
     <div id="search-modal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-20 hidden">
         <div class="bg-white p-4 rounded-md w-80">
-            <input id="search-input" type="text" placeholder="ຄົ້ນຫາ" class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring focus:border-blue-500 transition">
-            <button id="search-close" class="mt-1 w-full bg-red-500 text-white px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring focus:border-blue-500 transition">ປິດ</button>
+            <input id="search-input" type="text" placeholder="ຄົ້ນຫາ"
+                class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring focus:border-blue-500 transition">
+            <button id="search-close"
+                class="mt-1 w-full bg-red-500 text-white px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring focus:border-blue-500 transition">ປິດ</button>
         </div>
     </div>
 
-    <div id="edit-modal" class="flex">
-        <div id="edit-form">
-            <h2 class="text-center text-2xl">ແກ້ໄຂສິນຄ້າ</h2>
+    <div id="new-modal" class="reloadfixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-20 hidden">
+        <div id="new-form"
+            class="bg-white w-[430px] min-h-[430px] max-h-[80%] overflow-y-auto overflow-x-hidden p-6 rounded-lg shadow-lg">
+            <h2 class="text-center text-2xl font-semibold mb-4">ເພີ່ມສິນຄ້າ</h2>
 
             <div class="mb-4">
-                <img id="preview-img" src="" alt="Image Preview" class="w-full h-32 object-cover border rounded mb-2" />
+                <img id="new-preview-img" src="https://via.placeholder.com/150" alt="Image Preview"
+                    class="w-full max-h-[480px] object-cover rounded-md mb-2" />
             </div>
 
-            <label for="product-img">ຮູບພາບ:</label>
-            <input type="file" id="product-img" class="w-full mb-2 p-2 border rounded" accept=".png, .jpg, .jpeg" />
+            <form id="new-product-form" method="dialog">
+                <div class="mb-4">
+                    <label for="new-product-img" class="block text-sm font-medium text-gray-700">ຮູບພາບ:</label>
+                    <input type="file" id="new-product-img"
+                        class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring focus:border-blue-500 transition"
+                        accept=".png, .jpg, .jpeg" />
+                </div>
 
-            <label for="product-name">ຊື່ສິນຄ້າ:</label>
-            <input type="text" id="product-name" class="w-full mb-2 p-2 border rounded" />
+                <div class="mb-4">
+                    <label for="new-product-name" class="block text-sm font-medium text-gray-700">ຊື່ສິນຄ້າ:</label>
+                    <input type="text" id="new-product-name"
+                        class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring focus:border-blue-500 transition" />
+                </div>
 
-            <label for="product-price">ລາຄາ:</label>
-            <input type="number" id="product-price" class="w-full mb-2 p-2 border rounded" />
+                <div class="mb-4">
+                    <label for="new-product-price" class="block text-sm font-medium text-gray-700">ລາຄາ:</label>
+                    <input type="number" id="new-product-price"
+                        class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring focus:border-blue-500 transition" />
+                </div>
 
-            <div class="flex justify-between">
-                <button id="delete-product" class="bg-red-500 text-white px-4 py-2 rounded">ລຶບ</button>
-                <button id="save-product" class="bg-blue-500 text-white px-4 py-2 rounded">ບັນທຶກ</button>
+                <div class="flex items-center justify-between p-4">
+                    <button id="cancel-new" type="button"
+                        class="bg-yellow-500 text-white px-4 py-2 rounded">ອອກ</button>
+                    <button id="new-save-product" type="submit"
+                        class="bg-blue-500 ml-2 text-white px-4 py-2 rounded">ບັນທຶກ</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="edit-modal" class="flex justify-center items-center p-4">
+        <div id="edit-form"
+            class="bg-white w-[430px] min-h-[430px] max-h-[80%] overflow-y-auto overflow-x-hidden p-6 rounded-lg shadow-lg">
+            <h2 class="text-center text-2xl font-semibold mb-4">ແກ້ໄຂສິນຄ້າ</h2>
+
+            <div class="mb-4">
+                <img id="edit-preview-img" src="https://via.placeholder.com/150" alt="Image Preview"
+                    class="w-full max-h-[480px] object-cover rounded-md mb-2" />
             </div>
+
+            <form  method="dialog">
+                <div class="mb-4">
+                    <label for="edit-product-img" class="block text-sm font-medium text-gray-700">ຮູບພາບ:</label>
+                    <input type="file" id="edit-product-img"
+                        class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring focus:border-blue-500 transition"
+                        accept=".png, .jpg, .jpeg" />
+                </div>
+
+                <div class="mb-4">
+                    <label for="edit-product-name" class="block text-sm font-medium text-gray-700">ຊື່ສິນຄ້າ:</label>
+                    <input type="text" id="edit-product-name"
+                        class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring focus:border-blue-500 transition" />
+                </div>
+
+                <div class="mb-4">
+                    <label for="edit-product-price" class="block text-sm font-medium text-gray-700">ລາຄາ:</label>
+                    <input type="number" id="edit-product-price"
+                        class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring focus:border-blue-500 transition" />
+                </div>
+
+                <div class="flex items-center justify-between p-4">
+                    <button id="cancel-edit" type="button"
+                        class="bg-yellow-500 text-white px-4 py-2 rounded">ອອກ</button>
+
+                    <div class="flex-grow"></div>
+
+                    <button id="delete-product" type="button"
+                        class="bg-red-500 text-white px-4 py-2 rounded">ລົບ</button>
+
+                    <button id="edit-save-product" type="submit"
+                        class="bg-blue-500 ml-2 text-white px-4 py-2 rounded">ບັນທຶກ</button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -103,9 +158,225 @@
         </section>
     </main>
 
-    <script src="js/grud.js" defer></script>
     <script>
-        document.getElementById('edit-modal').style.display = 'flex'
+        document.addEventListener("DOMContentLoaded", () => {
+            const mdContent = document.getElementById('md-content')
+            const smContent = document.getElementById('sm-content')
+            const searchIcon = document.getElementById('search-icon')
+            const menuIcon = document.getElementById('menu-icon')
+            const menu = document.getElementById('menu')
+            const menuOverlay = document.getElementById('menu-overlay')
+            const searchModal = document.getElementById('search-modal')
+            const searchClose = document.getElementById('search-close')
+            const searchInput = document.getElementById('search-input')
+            const editModal = document.getElementById('edit-modal')
+            const productNameInput = document.getElementById('edit-product-name')
+            const productPriceInput = document.getElementById('edit-product-price')
+            const editDeleteButton = document.getElementById('delete-product')
+            const editSaveButton = document.getElementById('edit-save-product')
+            const editProductImgInput = document.getElementById('edit-product-img')
+            const editPreviewImg = document.getElementById('edit-preview-img')
+            const cancelEditButton = document.getElementById('cancel-edit')
+
+            const newModal = document.getElementById('new-modal')
+            const newProductForm = document.getElementById('new-product-form')
+            const newProductImgInput = document.getElementById('new-product-img')
+            const newProductNameInput = document.getElementById('new-product-name')
+            const newProductPriceInput = document.getElementById('new-product-price')
+            const newPreviewImg = document.getElementById('new-preview-img')
+            const cancelNewButton = document.getElementById('cancel-new')
+            const newSaveProductButton = document.getElementById('new-save-product')
+
+            let itemMap = {}
+            let editingItemId = null
+
+            menuIcon.addEventListener('click', () => {
+                menu.classList.toggle('show')
+                menuOverlay.classList.toggle('hidden')
+            })
+
+            menuOverlay.addEventListener('click', () => {
+                menu.classList.remove('show')
+                menuOverlay.classList.add('hidden')
+            })
+
+            searchIcon.addEventListener('click', () => {
+                searchModal.classList.remove('hidden')
+            })
+
+            searchClose.addEventListener('click', () => {
+                searchModal.classList.add('hidden')
+            })
+
+            let debounceTimer
+            searchInput.addEventListener('input', () => {
+                clearTimeout(debounceTimer)
+                debounceTimer = setTimeout(() => {
+                    const query = searchInput.value.toLowerCase()
+                    filterItems(query)
+                }, 300)
+            })
+
+            function filterItems(query) {
+                document.querySelectorAll('#md-content .w-full').forEach(item => {
+                    const name = item.querySelector('h2').textContent.toLowerCase()
+                    item.style.display = name.includes(query) ? 'block' : 'none'
+                })
+                document.querySelectorAll('#sm-content .w-full').forEach(item => {
+                    const name = item.querySelector('h2').textContent.toLowerCase()
+                    item.style.display = name.includes(query) ? 'block' : 'none'
+                })
+            }
+
+            function fetchData() {
+                fetch('/api/getPost')
+                    .then(res => res.json())
+                    .then(({ result }) => {
+                        const generateHTML = (item) => `
+                        <div class="w-full rounded-md bg-gray-200 mb-2 transition-transform transition-shadow duration-300 ease-in-out hover:shadow-md hover:scale-105">
+                        <img class="rounded-t-md w-full max-h-[480px] object-cover" src="/img/${item.imgName || 'default.png'}">
+                        <div class="w-full p-2">
+                        <h2 class="text-lg">${item.name || 'Unnamed Product'}</h2>
+                        <p class="text-sm font-thin">${item.price ? item.price.toLocaleString() : 'Price not available'} ກີບ</p>
+                        </div>
+                        <button data-id="${item.id}" class="edit-product block w-full bg-yellow-500 p-2 rounded-b-md text-white">ແກ້ໄຂ</button>
+                        </div>
+                        `
+
+                        const renderGridContent = (columns) => {
+                            const content = Array.from({ length: columns }, () => [])
+                            itemMap = {}
+                            result.forEach((item, index) => {
+                                content[index % columns].push(generateHTML(item))
+                                itemMap[item.id] = item
+                            })
+                            return content.map(column => `<div>${column.join('')}</div>`).join('')
+                        }
+
+                        mdContent.innerHTML = renderGridContent(4)
+                        smContent.innerHTML = renderGridContent(2)
+
+                        document.querySelectorAll('.edit-product').forEach(button => {
+                            button.addEventListener('click', (e) => {
+                                const id = e.currentTarget.dataset.id
+                                const item = itemMap[id]
+
+                                if (item) {
+                                    productNameInput.value = item.name || ''
+                                    productPriceInput.value = item.price || ''
+                                    editingItemId = id
+
+                                    editPreviewImg.src = item.imgName ? `/img/${item.imgName}` : '/img/default.png'
+
+                                    editModal.style.display = 'flex'
+                                }
+                            })
+                        })
+
+                        document.getElementById('add-icon').addEventListener('click', () => {
+                            newModal.style.display = 'flex'
+                        })
+                    })
+                    .catch(() => {
+                        mdContent.innerHTML = '<p class="text-red-500">ບໍ່ສາມາດສະແດງສິ້ນຄ້າໄດ້</p>'
+                        smContent.innerHTML = '<p class="text-red-500">ບໍ່ສາມາດສະແດງສິ້ນຄ້າໄດ້</p>'
+                    })
+            }
+            fetchData()
+
+            editDeleteButton.addEventListener('click', () => {
+                if (editingItemId) {
+                    fetch(`/api/delete/${editingItemId}`)
+                        .then(() => {
+                            editModal.style.display = 'none'
+                            fetchData()
+                        })
+                        .catch(err => console.error('ລົບຜິດພາດ:', err))
+                }
+            })
+
+            editSaveButton.addEventListener('click', () => {
+                if (editingItemId) {
+                    const updatedData = {
+                        name: productNameInput.value,
+                        price: Number(productPriceInput.value),
+                    }
+
+                    editModal.style.display = 'none'
+                    fetchData()
+
+                    // fetch(`/api/update/${editingItemId}`, {
+                    //     method: 'PUT',
+                    //     headers: { 'Content-Type': 'application/json' },
+                    //     body: JSON.stringify(updatedData)
+                    // })
+                    //     .then(() => {
+                    //         editModal.style.display = 'none'
+                    //         fetchData()
+                    //     })
+                    //     .catch(err => console.error('Update failed:', err))
+                }
+            })
+
+            cancelEditButton.addEventListener('click', () => {
+                editModal.style.display = 'none'
+            })
+
+            editProductImgInput.addEventListener('change', (event) => {
+                const file = event.target.files[0]
+                if (file) {
+                    const reader = new FileReader()
+                    reader.onload = () => {
+                        editPreviewImg.src = reader.result
+                    }
+                    reader.readAsDataURL(file)
+                } else {
+                    editPreviewImg.src = '/img/default.png'
+                }
+            })
+
+            cancelNewButton.addEventListener('click', () => {
+                newModal.style.display = 'none'
+                resetNewProductForm()
+            })
+
+            newProductImgInput.addEventListener('change', () => {
+                const file = newProductImgInput.files[0]
+                if (file) {
+                    const reader = new FileReader()
+                    reader.onload = () => {
+                        newPreviewImg.src = reader.result
+                    }
+                    reader.readAsDataURL(file)
+                } else {
+                    newPreviewImg.src = 'https://via.placeholder.com/150'
+                }
+            })
+
+            newProductForm.addEventListener('submit', (e) => {
+                e.preventDefault()
+
+                const productName = newProductNameInput.value.trim()
+                const productPrice = newProductPriceInput.value.trim()
+                const productImage = newProductImgInput.files[0]
+
+                if (!productName || !productPrice || !productImage) {
+                    alert('ກະລຸນາໃສ່ຂໍ້ມູນ')
+                    return
+                }
+
+                newModal.style.display = 'none'
+                resetNewProductForm()
+            })
+
+            function resetNewProductForm() {
+                newProductForm.reset()
+                newPreviewImg.src = 'https://via.placeholder.com/150'
+            }
+        })
+
+    </script>
+    <script>
         document.getElementById('edit-modal').style.display = 'none'
     </script>
 </body>

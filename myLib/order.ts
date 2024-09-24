@@ -12,7 +12,6 @@ export async function Order(req: Request, res: Response) {
         res.status(200).json(
             myRes(1, "ການຊື້ສຳເລັດ")
         )
-        console.log(cart)
     } catch (error) {
         res.status(500).json(
             myRes(0, "ການຊືເກີດຂໍ້ຜິດພາດ")
