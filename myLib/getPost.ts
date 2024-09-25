@@ -5,7 +5,7 @@ import { myRes } from "./myRes"
 
 export async function getPost(req: Request, res: Response) {
     try {
-        const [result] = await db.query<RowDataPacket[]>("SELECT * FROM post LIMIT 10")
+        const [result] = await db.query<RowDataPacket[]>("SELECT * FROM post ORDER BY id DESC")
         if (result.length === 0) {
             return res.status(404).json(
                 myRes(0, "ບໍ່ມີສິນຄ້າ")

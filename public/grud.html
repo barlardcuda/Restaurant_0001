@@ -10,7 +10,8 @@
     <title>ແກ້ໄຂສິນຄ້າ</title>
     <style>
         #menu {
-            transform: translateX(-100%); transition: transform 0.3s ease
+            transform: translateX(-100%);
+            transition: transform 0.3s ease
         }
 
         #menu.show {
@@ -22,11 +23,25 @@
         }
 
         #edit-modal {
-            position: fixed; inset: 0; background: rgba(0, 0, 0, 0.5); display: none; justify-content: center; align-items: center; backdrop-filter: blur(4px); z-index: 30
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(4px);
+            z-index: 30
         }
 
         #new-modal {
-            position: fixed; inset: 0; background: rgba(0, 0, 0, 0.5); display: none; justify-content: center; align-items: center; backdrop-filter: blur(4px); z-index: 30
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(4px);
+            z-index: 30
         }
     </style>
 </head>
@@ -115,7 +130,7 @@
                     class="w-full max-h-[480px] object-cover rounded-md mb-2" />
             </div>
 
-            <form  method="dialog">
+            <form method="dialog">
                 <div class="mb-4">
                     <label for="edit-product-img" class="block text-sm font-medium text-gray-700">ຮູບພາບ:</label>
                     <input type="file" id="edit-product-img"
@@ -295,26 +310,47 @@
                 }
             })
 
-            editSaveButton.addEventListener('click', () => {
+            editSaveButton.addEventListener('click', async () => {
                 if (editingItemId) {
-                    const updatedData = {
-                        name: productNameInput.value,
-                        price: Number(productPriceInput.value),
+                    const productName = productNameInput.value.trim();
+                    const productPrice = Number(productPriceInput.value.trim());
+                    const productImage = editProductImgInput.files[0];
+
+                    if (!productName || isNaN(productPrice)) {
+                        alert('Please provide valid product name and price.');
+                        return;
                     }
 
-                    editModal.style.display = 'none'
-                    fetchData()
+                    const formData = new FormData();
+                    formData.append('file', productImage || '');
+                    formData.append('name', productName);
+                    formData.append('price', productPrice);
 
-                    // fetch(`/api/update/${editingItemId}`, {
-                    //     method: 'PUT',
-                    //     headers: { 'Content-Type': 'application/json' },
-                    //     body: JSON.stringify(updatedData)
-                    // })
-                    //     .then(() => {
-                    //         editModal.style.display = 'none'
-                    //         fetchData()
-                    //     })
-                    //     .catch(err => console.error('Update failed:', err))
+                    editSaveButton.disabled = true;
+                    editSaveButton.textContent = 'Please wait...';
+
+                    try {
+                        const response = await fetch(`/api/update/${editingItemId}`, {
+                            method: 'POST',
+                            body: formData,
+                        });
+
+                        if (response.ok) {
+                            alert('ແກ້ໄຂສຳເລັດແລ້ວ!');
+                        } else {
+                            throw new Error('ແກ້ໄຂຜິດພາດ');
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                        alert('ມີບາງຢ່າງຜິດພາດ.');
+                    } finally {
+                        editSaveButton.disabled = false;
+                        editSaveButton.textContent = 'Save';
+                    }
+
+                    // Optionally refresh data or close modal
+                    fetchData();
+                    editModal.style.display = 'none';
                 }
             })
 
@@ -341,37 +377,64 @@
             })
 
             newProductImgInput.addEventListener('change', () => {
-                const file = newProductImgInput.files[0]
+                const file = newProductImgInput.files[0];
                 if (file) {
-                    const reader = new FileReader()
+                    const reader = new FileReader();
                     reader.onload = () => {
-                        newPreviewImg.src = reader.result
-                    }
-                    reader.readAsDataURL(file)
+                        newPreviewImg.src = reader.result;
+                    };
+                    reader.readAsDataURL(file);
                 } else {
-                    newPreviewImg.src = 'https://via.placeholder.com/150'
+                    newPreviewImg.src = 'https://via.placeholder.com/150';
                 }
-            })
+            });
 
-            newProductForm.addEventListener('submit', (e) => {
-                e.preventDefault()
-
-                const productName = newProductNameInput.value.trim()
-                const productPrice = newProductPriceInput.value.trim()
-                const productImage = newProductImgInput.files[0]
+            newSaveProductButton.addEventListener('click', async () => {
+                const productName = newProductNameInput.value.trim();
+                const productPrice = newProductPriceInput.value.trim();
+                const productImage = newProductImgInput.files[0];
 
                 if (!productName || !productPrice || !productImage) {
-                    alert('ກະລຸນາໃສ່ຂໍ້ມູນ')
-                    return
+                    alert('ກະລຸນາໃສ່ຂໍ້ມູນ');
+                    return;
                 }
 
+                const formData = new FormData();
+                formData.append('file', productImage);
+                formData.append('name', productName);
+                formData.append('price', productPrice);
+
+                newSaveProductButton.disabled = true;
+                newSaveProductButton.textContent = 'ກະລຸນາລໍຖ້າ';
+
+                try {
+                    const response = await fetch('/api/upload', {
+                        method: 'POST',
+                        body: formData,
+                    });
+
+                    if (response.ok) {
+                        alert('ສຳເລັດແລ້ວ');
+                        resetNewProductForm();
+                    } else {
+                        alert('ມີບາງຢ່າງຜິດພາດ');
+                    }
+                } catch (error) {
+                    console.error('ມີບາງຢ່າງຜິດພາດ:', error);
+                    alert('ມີບາງຢ່າງຜິດພາດ');
+                } finally {
+                    newSaveProductButton.disabled = false;
+                    newSaveProductButton.textContent = 'ບັນທຶກ';
+                }
+
+                fetchData()
                 newModal.style.display = 'none'
                 resetNewProductForm()
-            })
+            });
 
             function resetNewProductForm() {
-                newProductForm.reset()
-                newPreviewImg.src = 'https://via.placeholder.com/150'
+                newProductForm.reset();
+                newPreviewImg.src = 'https://via.placeholder.com/150';
             }
         })
 

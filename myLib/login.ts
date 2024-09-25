@@ -16,7 +16,7 @@ export async function Login(req: Request, res: Response) {
     }
 
     try {
-        const [result] = await db.execute<RowDataPacket[]>("SELECT password FROM account WHERE email = ?", [email])
+        const [result] = await db.execute<RowDataPacket[]>("SELECT * FROM account WHERE email = ?", [email])
         
         if (result.length === 0) {
             return res.status(401).json(
@@ -29,6 +29,10 @@ export async function Login(req: Request, res: Response) {
             return res.status(401).json(
                 myRes(0, 'ລະຫັດຜ່ານບໍ່ຖືກຕ້ອງ')
             )
+        }
+
+        if (user.admin === 1) {
+            req.session.admin = email
         }
 
         req.session.account = email
