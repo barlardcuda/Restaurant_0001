@@ -287,10 +287,6 @@
                                 }
                             })
                         })
-
-                        document.getElementById('add-icon').addEventListener('click', () => {
-                            newModal.style.display = 'flex'
-                        })
                     })
                     .catch(() => {
                         mdContent.innerHTML = '<p class="text-red-500">ບໍ່ສາມາດສະແດງສິ້ນຄ້າໄດ້</p>'
@@ -298,6 +294,10 @@
                     })
             }
             fetchData()
+
+            document.getElementById('add-icon').addEventListener('click', () => {
+                newModal.style.display = 'flex'
+            })
 
             editDeleteButton.addEventListener('click', () => {
                 if (editingItemId) {
